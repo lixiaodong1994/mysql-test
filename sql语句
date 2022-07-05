@@ -1,0 +1,137 @@
+-- 1. 查询"01"课程比"02"课程成绩高的学生的信息及课程分数
+-- 第一种解法
+-- select 
+-- 	a.s_id, a.s_score as s1, b.s_score as s2,
+-- 	c.s_name
+-- from 
+-- 	Score a, Score b, Student c
+-- where 
+-- 	a.s_id = b.s_id
+-- 	and a.s_id = c.s_id
+-- 	and a.c_id = '01'
+-- 	and b.c_id = '02'
+-- 	and a.s_score > b.s_score
+
+-- 第二种解法
+-- select 
+-- 	b.*
+-- from 
+-- 	Student b 
+-- left join 
+-- (select 
+-- 	a.s_id,
+-- 	IFNULL(MAX(case when a.c_id = '01' then a.s_score else NULL end),0) s1,
+-- 	IFNULL(MAX(case when a.c_id = '02' then a.s_score else NULL end),0) s2
+-- from 
+-- 	Score a
+-- GROUP BY
+-- 	a.s_id) t
+-- on b.s_id = t.s_id
+-- where 
+-- 	t.s1 > t.s2
+	
+-- 2. 查询平均成绩大于等于60分的同学的学生编号和学生姓名和平均成绩
+-- select 
+-- 	b.*,
+-- 	AVG(a.s_score) avg1
+-- from 
+-- 	Score a , Student b 
+-- where 
+-- 	a.s_id = b.s_id
+-- GROUP BY
+-- 	a.s_id
+-- HAVING
+-- 	AVG(a.s_score) >= 60
+
+-- 3. 查询所有同学的学生编号、学生姓名、选课总数、所有课程的总成绩
+-- select 
+-- 	a.s_id,
+-- 	a.s_name,
+-- 	COUNT(b.c_id) c1,
+-- 	IFNULL(SUM(b.s_score),0) s1
+-- from 
+-- 	Student a 
+-- left join 
+-- 	Score b 
+-- on a.s_id = b.s_id
+-- GROUP BY
+-- 	a.s_id,
+-- 	a.s_name
+
+-- 4. 查询学过"张三"老师授课的同学的信息 
+
+-- 使用exists效率更高
+-- select 
+-- 	d.*
+-- from 
+-- 	Student d 
+-- where 
+-- EXISTS
+-- (
+-- 	select 1 
+-- 	from 
+-- (select 
+-- 	c.s_id
+-- from 
+-- 	Teacher a 
+-- left join 
+-- 	Course b 
+-- on a.t_id =  b.t_id
+-- left join 
+-- 	Score c 
+-- on b.c_id = c.c_id
+-- where a.t_name = '张三'
+-- group by 
+-- 	c.s_id) t where d.s_id = t.s_id)
+-- -------------------------------------
+-- select 
+-- 	d.*
+-- from 
+-- 	Student d 
+-- where 
+-- d.s_id in 
+-- (select 
+-- 	c.s_id
+-- from 
+-- 	Teacher a 
+-- left join 
+-- 	Course b 
+-- on a.t_id =  b.t_id
+-- left join 
+-- 	Score c 
+-- on b.c_id = c.c_id
+-- where a.t_name = '张三'
+-- group by 
+-- 	c.s_id)
+
+-- 5. 查询没学过"张三"老师授课的同学的信息 
+
+-- select 
+-- 	d.*
+-- from 
+-- 	Student d 
+-- where 
+-- not EXISTS
+-- (
+-- 	select 1 
+-- 	from 
+-- (select 
+-- 	c.s_id
+-- from 
+-- 	Teacher a 
+-- left join 
+-- 	Course b 
+-- on a.t_id =  b.t_id
+-- left join 
+-- 	Score c 
+-- on b.c_id = c.c_id
+-- where a.t_name = '张三'
+-- group by 
+-- 	c.s_id) t where d.s_id = t.s_id)
+
+-- 6. 查询学过编号为"01"但是没有学过编号为"02"的课程的同学的信息
+
+
+
+
+	
