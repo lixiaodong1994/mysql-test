@@ -129,9 +129,70 @@
 -- group by 
 -- 	c.s_id) t where d.s_id = t.s_id)
 
--- 6. 查询学过编号为"01"但是没有学过编号为"02"的课程的同学的信息
+-- 查询每门课程被选修的学生数
+-- select 
+-- 	b.c_id,
+-- 	b.c_name,
+-- 	count(1) cont
+-- from 
+-- 	Score a 
+-- left join 
+-- 	Course b 
+-- on a.c_id = b.c_id
+-- group by b.c_id, b.c_name
 
+-- 查询出只有两门课程的全部学生的学号和姓名
+-- select 
+-- 	b.s_id, b.s_name,
+-- 	count(a.c_id) c_count
+-- from 
+-- 	Score a
+-- left join 
+-- 	Student b 
+-- on a.s_id = b.s_id
+-- group by b.s_id, b.s_name
+-- having count(a.c_id) = 2
 
+-- 查询男生、女生人数
+-- select 
+-- 	sum(case when a.s_sex = '男' then 1 else 0 end ) man_count,
+-- 	sum(case when a.s_sex = '女' then 1 else 0 end ) women_count
+-- from 
+-- 	Student a
 
+-- 查询每门课程的平均成绩，结果按平均成绩降序排列， 平均成绩相同时，按课程编号升序排列
+-- select 
+-- 	a.c_id,
+-- 	AVG(a.s_score) avg_score
+-- from 
+-- 	Score a 
+-- group by a.c_id
+-- order by AVG(a.s_score) desc, a.c_id asc
 
-	
+-- 查询平均成绩大于等于85的所有学生的学号、姓名和平均成绩
+-- select 
+-- 	b.s_id, b.s_name,
+-- 	AVG(a.s_score) avg_score
+-- from 
+-- 	Score a 
+-- left join 
+-- 	Student b 
+-- on a.s_id = b.s_id
+-- group by b.s_id, b.s_name
+-- having AVG(a.s_score) >= 85
+
+-- 查询课程名称为‘数学’，且分数低于60的学生姓名和分数
+-- select 
+-- 	c.s_id,c.s_name,a.s_score
+-- from 
+-- 	Score a 
+-- left join 
+-- 	Course b 
+-- on a.c_id = b.c_id
+-- left join 
+-- 	Student c 
+-- on a.s_id = c.s_id
+-- where 
+-- 	b.c_name = '数学'
+-- 	and a.s_score < 60
+
