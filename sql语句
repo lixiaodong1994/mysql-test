@@ -196,3 +196,50 @@
 -- 	b.c_name = '数学'
 -- 	and a.s_score < 60
 
+-- 查询不同课程成绩相同的学生的学生编号、课程编号、学生成绩
+-- select 
+-- 	 distinct a.*
+-- from 
+-- 	Score a , Score b 
+-- where 
+-- 	a.c_id != b.c_id
+-- and a.s_score = b.s_score
+
+-- 查询每门课成绩最好的前两名
+-- 第一种，rank函数
+-- select 
+--  t.*
+-- from 
+-- (
+-- select 
+-- 	a.c_id,
+-- 	a.s_score,
+-- 	rank() over(PARTITION by a.c_id order by a.s_score desc) rk
+-- from 
+-- 	Score a 
+-- ) t
+-- where t.rk <= 2
+
+-- 子查询 
+-- select 
+-- 	a.c_id, a.s_score
+-- from 
+-- 	Score a 
+-- where 
+-- 	(select count(a.s_score) from Score b where a.c_id = b.c_id and a.s_score < b.s_score ) + 1 <= 2
+-- ORDER BY 
+-- 	a.c_id asc
+
+-- 查询每个学生的年龄
+-- select 
+-- 	a.*,
+-- 	(YEAR(NOW()) - a.s_brith) age
+-- from 
+-- 	Student a 
+
+-- 查询本周过生日的学生
+-- select 
+-- a.*
+-- from Student a 
+-- where 
+-- 	WEEKOFYEAR(STR_TO_DATE(CONCAT(YEAR(NOW()), DATE_FORMAT(a.s_brith, '%m%d')),'%y%m%d')) = WEEKOFYEAR(NOW())
